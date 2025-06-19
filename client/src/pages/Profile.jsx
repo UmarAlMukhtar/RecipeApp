@@ -58,36 +58,22 @@ const Profile = () => {
 
     setLoading(true)
     try {
-      console.log('Fetching data for user ID:', user._id);
-      console.log('Full user object:', user);
-      
-      // Use the same endpoint that works for other users
+      // Fetch user's own recipes
       try {
         const myRecipesResponse = await api.get(`/users/${user._id}/recipes`)
-        console.log('My recipes API response:', myRecipesResponse.data);
         setMyRecipes(myRecipesResponse.data || [])
       } catch (error) {
-        console.error('Error fetching my recipes:', error);
-        console.log('Error details:', error.response?.data);
-        
         // Fallback: try to get recipes from general endpoint
         try {
-          console.log('Trying fallback method for my recipes...');
           const allRecipesResponse = await api.get('/recipes?limit=100')
-          console.log('All recipes response:', allRecipesResponse.data);
-          
           const userRecipes = allRecipesResponse.data.recipes?.filter(recipe => {
             const authorId = recipe.author?._id || recipe.author
             const userId = user._id || user.id
-            const matches = authorId === userId
-            console.log(`Recipe "${recipe.title}" author: ${authorId}, user: ${userId}, matches: ${matches}`);
-            return matches
+            return authorId === userId
           }) || []
           
-          console.log('Filtered user recipes:', userRecipes);
           setMyRecipes(userRecipes)
         } catch (fallbackError) {
-          console.error('Fallback also failed:', fallbackError);
           setMyRecipes([])
         }
       }
@@ -95,15 +81,12 @@ const Profile = () => {
       // Fetch saved recipes
       try {
         const savedRecipesResponse = await api.get('/users/profile/saved')
-        console.log('Saved recipes response:', savedRecipesResponse.data);
         setSavedRecipes(savedRecipesResponse.data || [])
       } catch (error) {
-        console.error('Error fetching saved recipes:', error);
         setSavedRecipes([])
       }
 
     } catch (error) {
-      console.error('Error in fetchUserData:', error)
       toast.error('Failed to load profile data')
       setMyRecipes([])
       setSavedRecipes([])

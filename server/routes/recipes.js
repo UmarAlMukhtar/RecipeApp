@@ -22,8 +22,6 @@ router.get("/", async (req, res) => {
       limit = 12,
     } = req.query;
 
-    console.log("Fetching recipes with query:", req.query);
-
     // Build query
     let query = {};
 
@@ -77,8 +75,6 @@ router.get("/", async (req, res) => {
       .skip((page - 1) * limit);
 
     const total = await Recipe.countDocuments(query);
-
-    console.log(`Found ${recipes.length} recipes out of ${total} total`);
 
     res.json({
       recipes,
@@ -143,26 +139,18 @@ router.post("/", auth, async (req, res) => {
       image,
     } = req.body;
 
-    console.log("Creating recipe with data:", {
-      title,
-      hasImage: !!image,
-      imageType: typeof image,
-    });
-
     // Process image if provided
     let imageData = null;
     if (image) {
-      // If it's a base64 string, store it directly
-      if (typeof image === "string" && image.startsWith("data:image/")) {
+      if (typeof image === 'string' && image.startsWith('data:image/')) {
         imageData = {
           url: image,
-          public_id: `recipe_${Date.now()}`,
+          public_id: `recipe_${Date.now()}`
         };
-      } else if (typeof image === "string") {
-        // If it's already a URL
+      } else if (typeof image === 'string') {
         imageData = {
           url: image,
-          public_id: `recipe_${Date.now()}`,
+          public_id: `recipe_${Date.now()}`
         };
       }
     }
@@ -184,8 +172,6 @@ router.post("/", auth, async (req, res) => {
 
     await recipe.save();
     await recipe.populate("author", "username bio");
-
-    console.log("Recipe created successfully with image:", !!recipe.image);
 
     res.status(201).json({
       message: "Recipe created successfully",
@@ -216,12 +202,6 @@ router.put("/:id", auth, async (req, res) => {
       image,
     } = req.body;
 
-    console.log("Updating recipe with data:", {
-      title,
-      hasImage: !!image,
-      imageType: typeof image,
-    });
-
     const recipe = await Recipe.findById(req.params.id);
 
     if (!recipe) {
@@ -234,31 +214,23 @@ router.put("/:id", auth, async (req, res) => {
     }
 
     // Process image if provided
-    let imageData = recipe.image; // Keep existing image by default
+    let imageData = recipe.image;
     if (image !== null) {
-      if (
-        image &&
-        typeof image === "string" &&
-        image.startsWith("data:image/")
-      ) {
-        // New base64 image
+      if (image && typeof image === 'string' && image.startsWith('data:image/')) {
         imageData = {
           url: image,
-          public_id: `recipe_${Date.now()}`,
+          public_id: `recipe_${Date.now()}`
         };
-      } else if (image && typeof image === "string") {
-        // New URL
+      } else if (image && typeof image === 'string') {
         imageData = {
           url: image,
-          public_id: `recipe_${Date.now()}`,
+          public_id: `recipe_${Date.now()}`
         };
       } else if (!image) {
-        // Remove image
         imageData = null;
       }
     }
 
-    // Update recipe
     const updatedRecipe = await Recipe.findByIdAndUpdate(
       req.params.id,
       {
@@ -276,11 +248,6 @@ router.put("/:id", auth, async (req, res) => {
       },
       { new: true }
     ).populate("author", "username bio");
-
-    console.log(
-      "Recipe updated successfully with image:",
-      !!updatedRecipe.image
-    );
 
     res.json({
       message: "Recipe updated successfully",

@@ -64,7 +64,6 @@ export const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const response = await api.get('/auth/me')
-          console.log('Loaded user from /auth/me:', response.data.user);
           dispatch({ type: 'SET_USER', payload: response.data.user })
         } catch (error) {
           console.error('Failed to load user:', error)
@@ -82,12 +81,10 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'LOGIN_START' })
     try {
       const response = await api.post('/auth/login', { 
-        email: emailOrUsername, // Backend will handle both email and username
+        email: emailOrUsername,
         password 
       })
       const { token, user } = response.data
-
-      console.log('Login response user:', user);
 
       localStorage.setItem('token', token)
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`

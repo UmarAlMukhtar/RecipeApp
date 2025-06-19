@@ -115,16 +115,13 @@ const SubmitRecipe = () => {
         ingredients,
         instructions: formData.instructions,
         tags,
-        image: formData.image // This should be the base64 string
+        image: formData.image
       }
-
-      console.log('Submitting recipe with image:', !!recipeData.image);
 
       const response = await api.post('/recipes', recipeData)
       
       toast.success('Recipe submitted successfully!')
       
-      // Clear localStorage cache to force profile refresh
       if (typeof Storage !== 'undefined') {
         localStorage.removeItem('profileCache')
       }

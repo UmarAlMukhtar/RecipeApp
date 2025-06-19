@@ -20,21 +20,12 @@ const UserProfile = () => {
   const fetchUserProfile = async () => {
     setLoading(true)
     try {
-      console.log(`Fetching profile for user ID: ${userId}`);
-      
-      // Get user's recipes
       const recipesResponse = await api.get(`/users/${userId}/recipes`)
-      console.log('User profile recipes response:', recipesResponse.data);
       setRecipes(recipesResponse.data || [])
       
-      // Get user info from the first recipe's author, or create a placeholder
       if (recipesResponse.data && recipesResponse.data.length > 0) {
         setUser(recipesResponse.data[0].author)
-        console.log('User info from recipe author:', recipesResponse.data[0].author);
       } else {
-        // If no recipes, try to get user info from a user endpoint (if it exists)
-        // For now, create a placeholder
-        console.log('No recipes found, creating placeholder user');
         setUser({ username: 'User', bio: 'This user has not added a bio yet.' })
         toast.info('This user has not shared any recipes yet')
       }

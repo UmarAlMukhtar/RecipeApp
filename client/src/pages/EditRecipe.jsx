@@ -160,10 +160,8 @@ const EditRecipe = () => {
         ingredients,
         instructions: formData.instructions,
         tags,
-        image: formData.image // This should be the base64 string or existing URL
+        image: formData.image
       }
-
-      console.log('Updating recipe with image:', !!recipeData.image);
 
       await api.put(`/recipes/${id}`, recipeData)
       
