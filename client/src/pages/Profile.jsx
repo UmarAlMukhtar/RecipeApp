@@ -123,7 +123,14 @@ const Profile = () => {
     try {
       await api.delete(`/recipes/${recipeId}`)
       setMyRecipes(prev => prev.filter(recipe => recipe._id !== recipeId))
+      setDropdownOpen({}) // Close all dropdowns
       toast.success('Recipe deleted successfully!')
+      
+      // Refresh the component data
+      setTimeout(() => {
+        fetchUserData()
+      }, 500) // Small delay to ensure UI updates smoothly
+      
     } catch (error) {
       console.error('Error deleting recipe:', error)
       toast.error('Failed to delete recipe')

@@ -41,18 +41,52 @@ const SubmitRecipe = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0]
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        toast.error('Image size must be less than 5MB')
+      if (file.size > 2 * 1024 * 1024) { // Reduced to 2MB limit
+        toast.error('Image size must be less than 2MB')
         return
       }
 
       const reader = new FileReader()
       reader.onloadend = () => {
-        setImagePreview(reader.result)
-        setFormData({
-          ...formData,
-          image: reader.result
-        })
+        // Compress the image by resizing it
+        const img = new Image()
+        img.onload = () => {
+          const canvas = document.createElement('canvas')
+          const ctx = canvas.getContext('2d')
+          
+          // Set max dimensions
+          const maxWidth = 800
+          const maxHeight = 600
+          
+          let { width, height } = img
+          
+          // Calculate new dimensions
+          if (width > height) {
+            if (width > maxWidth) {
+              height = (height * maxWidth) / width
+              width = maxWidth
+            }
+          } else {
+            if (height > maxHeight) {
+              width = (width * maxHeight) / height
+              height = maxHeight
+            }
+          }
+          
+          canvas.width = width
+          canvas.height = height
+          
+          // Draw and compress
+          ctx.drawImage(img, 0, 0, width, height)
+          const compressedImage = canvas.toDataURL('image/jpeg', 0.7) // 70% quality
+          
+          setImagePreview(compressedImage)
+          setFormData({
+            ...formData,
+            image: compressedImage
+          })
+        }
+        img.src = reader.result
       }
       reader.readAsDataURL(file)
     }
@@ -345,7 +379,7 @@ const SubmitRecipe = () => {
                       </label>
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      PNG, JPG, JPEG up to 5MB
+                      PNG, JPG, JPEG up to 2MB (automatically optimized)
                     </p>
                   </div>
                 )}

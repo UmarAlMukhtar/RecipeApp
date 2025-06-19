@@ -17,16 +17,28 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// CORS
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? ["https://your-frontend-domain.vercel.app"]
-        : ["http://localhost:5173", "http://localhost:3000"],
-    credentials: true,
-  })
-);
+// CORS configuration
+const corsOptions = {
+  origin:
+    process.env.NODE_ENV === "production"
+      ? ["https://your-frontend-domain.vercel.app"]
+      : [
+          "http://localhost:5173", // Vite dev server
+          "http://localhost:3000", // Alternative dev port
+          "http://127.0.0.1:5173",
+          "http://127.0.0.1:3000",
+        ],
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+};
+
+// Apply CORS middleware before other middleware
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options("*", cors(corsOptions));
 
 // Body parsing middleware
 app.use(express.json({ limit: "10mb" }));
@@ -92,4 +104,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-

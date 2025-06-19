@@ -7,6 +7,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: false, // Set to false for simpler CORS handling
 });
 
 // Add token to requests if available
