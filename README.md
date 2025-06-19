@@ -5,6 +5,7 @@ A modern, full-stack recipe sharing platform built with React, Node.js, Express,
 ## 🌟 Features
 
 ### Core Features
+
 - **User Authentication** - Secure registration and login with JWT
 - **Recipe Management** - Create, edit, delete, and share recipes
 - **Recipe Discovery** - Browse, search, and filter recipes
@@ -13,6 +14,7 @@ A modern, full-stack recipe sharing platform built with React, Node.js, Express,
 - **User Profiles** - Manage your recipes and saved favorites
 
 ### Advanced Features
+
 - **QR Code Sharing** - Generate QR codes for easy recipe sharing
 - **Markdown Support** - Rich text formatting for recipe instructions
 - **Image Upload** - Upload beautiful photos of your dishes
@@ -23,6 +25,7 @@ A modern, full-stack recipe sharing platform built with React, Node.js, Express,
 ## 🚀 Tech Stack
 
 ### Frontend
+
 - **React 19** - Modern React with hooks and context
 - **Tailwind CSS v4** - Utility-first CSS framework
 - **Framer Motion** - Smooth animations and transitions
@@ -33,6 +36,7 @@ A modern, full-stack recipe sharing platform built with React, Node.js, Express,
 - **QRCode** - QR code generation
 
 ### Backend
+
 - **Node.js** - JavaScript runtime
 - **Express.js** - Web application framework
 - **MongoDB** - NoSQL database
@@ -69,17 +73,20 @@ RecipeApp/
 ## 🛠️ Installation & Setup
 
 ### Prerequisites
+
 - Node.js (v18 or higher)
 - MongoDB (local installation or MongoDB Atlas)
 - Git
 
 ### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/yourusername/RecipeApp.git
 cd RecipeApp
 ```
 
 ### 2. Backend Setup
+
 ```bash
 # Navigate to server directory
 cd server
@@ -95,6 +102,7 @@ cp .env.example .env
 ```
 
 ### 3. Frontend Setup
+
 ```bash
 # Navigate to client directory
 cd ../client
@@ -121,12 +129,14 @@ NODE_ENV=development
 ### 5. Database Setup
 
 **Option A: Local MongoDB**
+
 ```bash
 # Start MongoDB service
 mongod
 ```
 
 **Option B: MongoDB Atlas**
+
 - Create account at [MongoDB Atlas](https://www.mongodb.com/atlas)
 - Create cluster and get connection string
 - Update MONGODB_URI in .env
@@ -134,6 +144,7 @@ mongod
 ### 6. Run the Application
 
 **Development Mode:**
+
 ```bash
 # Terminal 1 - Start backend server
 cd server
@@ -145,6 +156,7 @@ npm run dev
 ```
 
 **Production Mode:**
+
 ```bash
 # Build frontend
 cd client
@@ -158,11 +170,13 @@ npm start
 ## 🌐 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
 - `GET /api/auth/me` - Get current user
 
 ### Recipes
+
 - `GET /api/recipes` - Get all recipes (with filters)
 - `GET /api/recipes/:id` - Get single recipe
 - `POST /api/recipes` - Create new recipe
@@ -172,6 +186,7 @@ npm start
 - `POST /api/recipes/suggest` - Get AI recipe suggestions
 
 ### Users
+
 - `GET /api/users/:id/recipes` - Get user's recipes
 - `GET /api/users/profile/saved` - Get saved recipes
 - `POST /api/users/profile/save/:recipeId` - Save/unsave recipe
@@ -180,15 +195,19 @@ npm start
 ## 🎨 Features in Detail
 
 ### AI Recipe Suggestions
+
 Enter ingredients you have available, and our AI will suggest recipes you can make. The system uses intelligent matching to find recipes that best utilize your ingredients.
 
 ### QR Code Sharing
+
 Every recipe has a unique QR code that can be generated and shared. Perfect for sharing recipes in person or at cooking events.
 
 ### Markdown Support
+
 Write recipe instructions with rich formatting using Markdown syntax. Support for headers, lists, bold text, and more.
 
 ### Advanced Search & Filtering
+
 - Search by recipe name, ingredients, or description
 - Filter by cuisine type, difficulty level, cooking time
 - Sort by popularity, date, or trending
@@ -196,6 +215,7 @@ Write recipe instructions with rich formatting using Markdown syntax. Support fo
 ## 🚀 Deployment
 
 ### Frontend (Vercel)
+
 ```bash
 cd client
 npm run build
@@ -203,13 +223,16 @@ npm run build
 ```
 
 ### Backend (Railway/Heroku)
+
 ```bash
 cd server
 # Deploy to your preferred platform
 ```
 
 ### Environment Variables for Production
+
 Update your environment variables for production:
+
 - Use production MongoDB URI
 - Set strong JWT secret
 - Configure Cloudinary for production
@@ -229,7 +252,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Authors
 
-- **Your Name** - *Initial work* - [YourGitHub](https://github.com/yourusername)
+- **Your Name** - _Initial work_ - [YourGitHub](https://github.com/yourusername)
 
 ## 🙏 Acknowledgments
 
@@ -241,6 +264,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 If you have any questions or need help, please:
+
 - Open an issue on GitHub
 - Email: your.email@example.com
 
