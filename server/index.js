@@ -1,7 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const path = require("path");
-const connectDB = require("./config/database");
 const authRoutes = require("./routes/auth");
 const recipeRoutes = require("./routes/recipes");
 const userRoutes = require("./routes/users");
@@ -11,9 +10,6 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-// Connect to MongoDB
-connectDB();
 
 // Middleware
 app.use(express.json({ limit: "10mb" }));
