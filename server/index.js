@@ -44,3 +44,55 @@ if (process.env.NODE_ENV === "production") {
 app.listen(PORT, () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
+
+// 404 handler
+app.use("*", (req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
+
+// MongoDB connection with better error handling
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+    });
+
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+
+    // Seed data only after successful connection
+    require("./utils/seedData");
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error.message);
+
+    // Provide helpful error messages
+    if (error.message.includes("ECONNREFUSED")) {
+      console.log("💡 Make sure MongoDB is running on your system:");
+      console.log("   - Install MongoDB Community Server");
+      console.log("   - Start MongoDB service");
+      console.log("   - Or use MongoDB Atlas cloud database");
+    }
+
+    process.exit(1);
+  }
+};
+
+// Connect to database
+connectDB();
+
+// Serve static files from React build in production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../client/dist")));
+
+  // Handle React routing, return all requests to React app
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+  });
+}
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📊 Environment: ${process.env.NODE_ENV || "development"}`);
+});
