@@ -20,23 +20,29 @@ const UserProfile = () => {
   const fetchUserProfile = async () => {
     setLoading(true)
     try {
-      // Since we don't have a specific user profile endpoint, 
-      // we'll get user info from their recipes
-      const recipesResponse = await api.get(`/users/${userId}/recipes`)
-      setRecipes(recipesResponse.data)
+      console.log(`Fetching profile for user ID: ${userId}`);
       
-      // Get user info from the first recipe's author
-      if (recipesResponse.data.length > 0) {
+      // Get user's recipes
+      const recipesResponse = await api.get(`/users/${userId}/recipes`)
+      console.log('User profile recipes response:', recipesResponse.data);
+      setRecipes(recipesResponse.data || [])
+      
+      // Get user info from the first recipe's author, or create a placeholder
+      if (recipesResponse.data && recipesResponse.data.length > 0) {
         setUser(recipesResponse.data[0].author)
+        console.log('User info from recipe author:', recipesResponse.data[0].author);
       } else {
-        // If no recipes, we still need user info
-        // You might want to create a separate endpoint for this
+        // If no recipes, try to get user info from a user endpoint (if it exists)
+        // For now, create a placeholder
+        console.log('No recipes found, creating placeholder user');
+        setUser({ username: 'User', bio: 'This user has not added a bio yet.' })
         toast.info('This user has not shared any recipes yet')
-        setUser({ username: 'User', bio: '' })
       }
     } catch (error) {
       console.error('Error fetching user profile:', error)
       toast.error('Failed to load user profile')
+      setRecipes([])
+      setUser({ username: 'User', bio: '' })
     } finally {
       setLoading(false)
     }

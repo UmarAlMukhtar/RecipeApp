@@ -58,38 +58,53 @@ const Profile = () => {
 
     setLoading(true)
     try {
-      // Try different API endpoints to get user recipes
-      let myRecipesRes, savedRecipesRes;
+      console.log('Fetching data for user ID:', user._id);
+      console.log('Full user object:', user);
       
+      // Use the same endpoint that works for other users
       try {
-        // First try the user-specific recipes endpoint
-        myRecipesRes = await api.get(`/users/${user._id}/recipes`)
+        const myRecipesResponse = await api.get(`/users/${user._id}/recipes`)
+        console.log('My recipes API response:', myRecipesResponse.data);
+        setMyRecipes(myRecipesResponse.data || [])
       } catch (error) {
-        console.log('User recipes endpoint not found, trying alternative...')
-        // If that fails, get all recipes and filter by author
-        const allRecipesRes = await api.get('/recipes?limit=100')
-        const userRecipes = allRecipesRes.data.recipes?.filter(recipe => 
-          recipe.author._id === user._id || recipe.author === user._id
-        ) || []
-        myRecipesRes = { data: userRecipes }
+        console.error('Error fetching my recipes:', error);
+        console.log('Error details:', error.response?.data);
+        
+        // Fallback: try to get recipes from general endpoint
+        try {
+          console.log('Trying fallback method for my recipes...');
+          const allRecipesResponse = await api.get('/recipes?limit=100')
+          console.log('All recipes response:', allRecipesResponse.data);
+          
+          const userRecipes = allRecipesResponse.data.recipes?.filter(recipe => {
+            const authorId = recipe.author?._id || recipe.author
+            const userId = user._id || user.id
+            const matches = authorId === userId
+            console.log(`Recipe "${recipe.title}" author: ${authorId}, user: ${userId}, matches: ${matches}`);
+            return matches
+          }) || []
+          
+          console.log('Filtered user recipes:', userRecipes);
+          setMyRecipes(userRecipes)
+        } catch (fallbackError) {
+          console.error('Fallback also failed:', fallbackError);
+          setMyRecipes([])
+        }
       }
 
+      // Fetch saved recipes
       try {
-        savedRecipesRes = await api.get('/users/profile/saved')
+        const savedRecipesResponse = await api.get('/users/profile/saved')
+        console.log('Saved recipes response:', savedRecipesResponse.data);
+        setSavedRecipes(savedRecipesResponse.data || [])
       } catch (error) {
-        console.log('Saved recipes endpoint not found')
-        savedRecipesRes = { data: [] }
+        console.error('Error fetching saved recipes:', error);
+        setSavedRecipes([])
       }
 
-      setMyRecipes(myRecipesRes.data || [])
-      setSavedRecipes(savedRecipesRes.data || [])
-      
-      console.log('My recipes:', myRecipesRes.data)
-      console.log('Saved recipes:', savedRecipesRes.data)
     } catch (error) {
-      console.error('Error fetching user data:', error)
+      console.error('Error in fetchUserData:', error)
       toast.error('Failed to load profile data')
-      // Set empty arrays on error
       setMyRecipes([])
       setSavedRecipes([])
     } finally {

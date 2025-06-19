@@ -7,72 +7,86 @@ const { auth, optionalAuth } = require("../middleware/auth");
 const router = express.Router();
 
 // @route   GET /api/recipes
-// @desc    Get all recipes with filtering and pagination
+// @desc    Get all recipes with filters
 // @access  Public
-router.get("/", optionalAuth, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 12;
-    const skip = (page - 1) * limit;
+    const {
+      search,
+      cuisine,
+      tags,
+      difficulty,
+      maxTime,
+      sort = "latest",
+      page = 1,
+      limit = 12,
+    } = req.query;
 
-    let query = { isPublished: true };
+    console.log("Fetching recipes with query:", req.query);
 
-    // Search
-    if (req.query.search) {
-      query.$text = { $search: req.query.search };
+    // Build query
+    let query = {};
+
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { "ingredients.name": { $regex: search, $options: "i" } },
+      ];
     }
 
-    // Filters
-    if (req.query.cuisine) {
-      query.cuisine = { $regex: req.query.cuisine, $options: "i" };
+    if (cuisine) {
+      query.cuisine = cuisine;
     }
 
-    if (req.query.tags) {
-      const tags = req.query.tags.split(",");
-      query.tags = { $in: tags };
+    if (tags) {
+      const tagArray = tags.split(",").map((tag) => tag.trim());
+      query.tags = { $in: tagArray };
     }
 
-    if (req.query.maxTime) {
+    if (difficulty) {
+      query.difficulty = difficulty;
+    }
+
+    if (maxTime) {
       query.$expr = {
-        $lte: [
-          { $add: ["$prepTime", "$cookTime"] },
-          parseInt(req.query.maxTime),
-        ],
+        $lte: [{ $add: ["$prepTime", "$cookTime"] }, parseInt(maxTime)],
       };
     }
 
-    // Sort
-    let sort = { createdAt: -1 };
-    if (req.query.sort === "popular") {
-      sort = { "rating.average": -1, views: -1 };
-    } else if (req.query.sort === "trending") {
-      sort = { likes: -1, views: -1 };
+    // Sort options
+    let sortOption = {};
+    switch (sort) {
+      case "popular":
+        sortOption = { likes: -1, createdAt: -1 };
+        break;
+      case "trending":
+        sortOption = { views: -1, createdAt: -1 };
+        break;
+      case "latest":
+      default:
+        sortOption = { createdAt: -1 };
+        break;
     }
 
     const recipes = await Recipe.find(query)
-      .populate("author", "username avatar")
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .lean();
+      .populate("author", "username bio")
+      .populate("likes", "username")
+      .sort(sortOption)
+      .limit(limit * page)
+      .skip((page - 1) * limit);
 
     const total = await Recipe.countDocuments(query);
 
-    // Add user interaction data
-    if (req.user) {
-      recipes.forEach((recipe) => {
-        recipe.isLiked = recipe.likes.includes(req.user._id);
-        recipe.isSaved = req.user.savedRecipes.includes(recipe._id);
-      });
-    }
+    console.log(`Found ${recipes.length} recipes out of ${total} total`);
 
     res.json({
       recipes,
       pagination: {
-        page,
-        limit,
-        total,
+        page: parseInt(page),
         pages: Math.ceil(total / limit),
+        total,
+        limit: parseInt(limit),
       },
     });
   } catch (error) {

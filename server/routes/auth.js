@@ -60,10 +60,11 @@ router.post(
         message: "User registered successfully",
         token,
         user: {
+          _id: user._id,
           id: user._id,
           username: user.username,
           email: user.email,
-          avatar: user.avatar,
+          bio: user.bio || "",
         },
       });
     } catch (error) {
@@ -109,10 +110,11 @@ router.post(
         message: "Login successful",
         token,
         user: {
+          _id: user._id,
           id: user._id,
           username: user.username,
           email: user.email,
-          avatar: user.avatar,
+          bio: user.bio || "",
         },
       });
     } catch (error) {
@@ -129,11 +131,11 @@ router.get("/me", auth, async (req, res) => {
   try {
     res.json({
       user: {
+        _id: req.user._id,
         id: req.user._id,
         username: req.user.username,
         email: req.user.email,
-        avatar: req.user.avatar,
-        bio: req.user.bio,
+        bio: req.user.bio || "",
       },
     });
   } catch (error) {

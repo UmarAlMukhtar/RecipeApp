@@ -10,13 +10,16 @@ const router = express.Router();
 // @access  Public
 router.get("/:id/recipes", async (req, res) => {
   try {
+    console.log(`Fetching recipes for user: ${req.params.id}`);
+
     const recipes = await Recipe.find({
       author: req.params.id,
-      isPublished: true,
+      // Remove isPublished filter since it might not exist in our model
     })
-      .populate("author", "username avatar")
+      .populate("author", "username bio")
       .sort({ createdAt: -1 });
 
+    console.log(`Found ${recipes.length} recipes for user ${req.params.id}`);
     res.json(recipes);
   } catch (error) {
     console.error("Get user recipes error:", error);
