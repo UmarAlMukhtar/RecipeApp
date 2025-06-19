@@ -29,6 +29,26 @@ const Profile = () => {
     fetchUserData()
   }, [user?._id])
 
+  // Add effect to refetch data when component becomes visible
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && user?._id) {
+        fetchUserData()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    
+    // Also refetch when component mounts
+    if (user?._id) {
+      fetchUserData()
+    }
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [])
+
   const fetchUserData = async () => {
     if (!user?._id) {
       setLoading(false)

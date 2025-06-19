@@ -15,6 +15,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
+import UserProfile from './pages/UserProfile'
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/recipes" element={<Recipes />} />
                 <Route path="/recipe/:id" element={<RecipeDetail />} />
+                <Route path="/profile/:userId" element={<UserProfile />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route
@@ -80,4 +82,4 @@ function App() {
 }
 
 export default App
-        
+

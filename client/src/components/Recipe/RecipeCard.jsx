@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FiClock, FiUsers, FiHeart, FiBookmark } from 'react-icons/fi'
 import { motion } from 'framer-motion'
 import { useAuth } from '../../contexts/AuthContext'
@@ -11,6 +11,7 @@ const RecipeCard = ({ recipe }) => {
   const [isLiked, setIsLiked] = useState(recipe.isLiked || false)
   const [isSaved, setIsSaved] = useState(recipe.isSaved || false)
   const [likeCount, setLikeCount] = useState(recipe.likes?.length || 0)
+  const navigate = useNavigate()
 
   const handleLike = async (e) => {
     e.preventDefault()
@@ -43,6 +44,12 @@ const RecipeCard = ({ recipe }) => {
     } catch (error) {
       toast.error('Failed to save recipe')
     }
+  }
+
+  const handleAuthorClick = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    navigate(`/profile/${recipe.author._id}`)
   }
 
   return (
@@ -124,16 +131,19 @@ const RecipeCard = ({ recipe }) => {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
+            <button
+              onClick={handleAuthorClick}
+              className="flex items-center space-x-2 hover:bg-gray-50 dark:hover:bg-gray-700 p-1 rounded transition-colors"
+            >
               <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
                 <span className="text-white text-xs font-medium">
                   {recipe.author?.username?.[0]?.toUpperCase()}
                 </span>
               </div>
-              <span className="text-sm text-gray-600 dark:text-gray-400">
+              <span className="text-sm text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400">
                 {recipe.author?.username}
               </span>
-            </div>
+            </button>
             <span className={`px-3 py-1 rounded-full text-xs font-medium ${
               recipe.difficulty === 'Easy' 
                 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'

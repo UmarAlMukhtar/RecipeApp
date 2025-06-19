@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -29,6 +29,7 @@ const RecipeDetail = () => {
   const [likeCount, setLikeCount] = useState(0)
   const [showQR, setShowQR] = useState(false)
   const [qrCode, setQrCode] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchRecipe()
@@ -290,7 +291,10 @@ const RecipeDetail = () => {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Recipe by
               </h3>
-              <div className="flex items-center space-x-4">
+              <button
+                onClick={() => navigate(`/profile/${recipe.author._id}`)}
+                className="flex items-center space-x-4 w-full text-left hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
+              >
                 <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center">
                   <span className="text-white font-bold">
                     {recipe.author?.username?.[0]?.toUpperCase()}
@@ -306,7 +310,7 @@ const RecipeDetail = () => {
                     </p>
                   )}
                 </div>
-              </div>
+              </button>
             </div>
 
             {/* Timing */}

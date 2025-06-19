@@ -116,6 +116,12 @@ const SubmitRecipe = () => {
       const response = await api.post('/recipes', recipeData)
       
       toast.success('Recipe submitted successfully!')
+      
+      // Clear localStorage cache to force profile refresh
+      if (typeof Storage !== 'undefined') {
+        localStorage.removeItem('profileCache')
+      }
+      
       navigate(`/recipe/${response.data.recipe._id}`)
     } catch (error) {
       console.error('Submit recipe error:', error)
