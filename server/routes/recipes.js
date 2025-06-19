@@ -125,78 +125,162 @@ router.get("/:id", optionalAuth, async (req, res) => {
 });
 
 // @route   POST /api/recipes
-// @desc    Create recipe
+// @desc    Create a new recipe
 // @access  Private
-router.post(
-  "/",
-  auth,
-  [
-    body("title").notEmpty().withMessage("Title is required"),
-    body("ingredients")
-      .isArray({ min: 1 })
-      .withMessage("At least one ingredient is required"),
-    body("instructions").notEmpty().withMessage("Instructions are required"),
-    body("prepTime")
-      .isInt({ min: 1 })
-      .withMessage("Prep time must be at least 1 minute"),
-    body("cookTime")
-      .isInt({ min: 1 })
-      .withMessage("Cook time must be at least 1 minute"),
-    body("servings")
-      .isInt({ min: 1 })
-      .withMessage("Servings must be at least 1"),
-    body("cuisine").notEmpty().withMessage("Cuisine is required"),
-  ],
-  async (req, res) => {
-    try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+router.post("/", auth, async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      ingredients,
+      instructions,
+      prepTime,
+      cookTime,
+      servings,
+      difficulty,
+      cuisine,
+      tags,
+      image,
+    } = req.body;
+
+    console.log("Creating recipe with data:", {
+      title,
+      hasImage: !!image,
+      imageType: typeof image,
+    });
+
+    // Process image if provided
+    let imageData = null;
+    if (image) {
+      // If it's a base64 string, store it directly
+      if (typeof image === "string" && image.startsWith("data:image/")) {
+        imageData = {
+          url: image,
+          public_id: `recipe_${Date.now()}`,
+        };
+      } else if (typeof image === "string") {
+        // If it's already a URL
+        imageData = {
+          url: image,
+          public_id: `recipe_${Date.now()}`,
+        };
       }
-
-      const recipeData = {
-        ...req.body,
-        author: req.user._id,
-      };
-
-      const recipe = new Recipe(recipeData);
-      await recipe.save();
-
-      await recipe.populate("author", "username avatar");
-
-      res.status(201).json({
-        message: "Recipe created successfully",
-        recipe,
-      });
-    } catch (error) {
-      console.error("Create recipe error:", error);
-      res.status(500).json({ message: "Server error" });
     }
+
+    const recipe = new Recipe({
+      title,
+      description,
+      ingredients,
+      instructions,
+      prepTime: parseInt(prepTime),
+      cookTime: parseInt(cookTime),
+      servings: parseInt(servings),
+      difficulty,
+      cuisine,
+      tags: tags || [],
+      image: imageData,
+      author: req.user._id,
+    });
+
+    await recipe.save();
+    await recipe.populate("author", "username bio");
+
+    console.log("Recipe created successfully with image:", !!recipe.image);
+
+    res.status(201).json({
+      message: "Recipe created successfully",
+      recipe,
+    });
+  } catch (error) {
+    console.error("Create recipe error:", error);
+    res.status(500).json({ message: "Server error" });
   }
-);
+});
 
 // @route   PUT /api/recipes/:id
 // @desc    Update recipe
 // @access  Private
 router.put("/:id", auth, async (req, res) => {
   try {
+    const {
+      title,
+      description,
+      ingredients,
+      instructions,
+      prepTime,
+      cookTime,
+      servings,
+      difficulty,
+      cuisine,
+      tags,
+      image,
+    } = req.body;
+
+    console.log("Updating recipe with data:", {
+      title,
+      hasImage: !!image,
+      imageType: typeof image,
+    });
+
     const recipe = await Recipe.findById(req.params.id);
 
     if (!recipe) {
       return res.status(404).json({ message: "Recipe not found" });
     }
 
+    // Check if user owns this recipe
     if (recipe.author.toString() !== req.user._id.toString()) {
-      return res
-        .status(403)
-        .json({ message: "Not authorized to update this recipe" });
+      return res.status(401).json({ message: "Not authorized" });
     }
 
+    // Process image if provided
+    let imageData = recipe.image; // Keep existing image by default
+    if (image !== null) {
+      if (
+        image &&
+        typeof image === "string" &&
+        image.startsWith("data:image/")
+      ) {
+        // New base64 image
+        imageData = {
+          url: image,
+          public_id: `recipe_${Date.now()}`,
+        };
+      } else if (image && typeof image === "string") {
+        // New URL
+        imageData = {
+          url: image,
+          public_id: `recipe_${Date.now()}`,
+        };
+      } else if (!image) {
+        // Remove image
+        imageData = null;
+      }
+    }
+
+    // Update recipe
     const updatedRecipe = await Recipe.findByIdAndUpdate(
       req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    ).populate("author", "username avatar");
+      {
+        title,
+        description,
+        ingredients,
+        instructions,
+        prepTime: parseInt(prepTime),
+        cookTime: parseInt(cookTime),
+        servings: parseInt(servings),
+        difficulty,
+        cuisine,
+        tags: tags || [],
+        image: imageData,
+      },
+      { new: true }
+    ).populate("author", "username bio");
+
+    console.log(
+      "Recipe updated successfully with image:",
+      !!updatedRecipe.image
+    );
 
     res.json({
       message: "Recipe updated successfully",

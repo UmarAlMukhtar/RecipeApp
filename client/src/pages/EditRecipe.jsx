@@ -150,13 +150,20 @@ const EditRecipe = () => {
       }
 
       const recipeData = {
-        ...formData,
-        ingredients,
-        tags,
+        title: formData.title,
+        description: formData.description,
+        cuisine: formData.cuisine,
+        difficulty: formData.difficulty,
         prepTime: parseInt(formData.prepTime),
         cookTime: parseInt(formData.cookTime),
-        servings: parseInt(formData.servings)
+        servings: parseInt(formData.servings),
+        ingredients,
+        instructions: formData.instructions,
+        tags,
+        image: formData.image // This should be the base64 string or existing URL
       }
+
+      console.log('Updating recipe with image:', !!recipeData.image);
 
       await api.put(`/recipes/${id}`, recipeData)
       
