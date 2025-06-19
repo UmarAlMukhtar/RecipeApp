@@ -126,22 +126,7 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 NODE_ENV=development
 ```
 
-### 5. Database Setup
-
-**Option A: Local MongoDB**
-
-```bash
-# Start MongoDB service
-mongod
-```
-
-**Option B: MongoDB Atlas**
-
-- Create account at [MongoDB Atlas](https://www.mongodb.com/atlas)
-- Create cluster and get connection string
-- Update MONGODB_URI in .env
-
-### 6. Run the Application
+### 5.  Run the Application
 
 **Development Mode:**
 
@@ -214,7 +199,7 @@ Write recipe instructions with rich formatting using Markdown syntax. Support fo
 
 ## 🚀 Deployment
 
-### Frontend (Vercel)
+### Frontend 
 
 ```bash
 cd client
@@ -222,7 +207,7 @@ npm run build
 # Deploy to Vercel
 ```
 
-### Backend (Railway/Heroku)
+### Backend 
 
 ```bash
 cd server
@@ -238,22 +223,6 @@ Update your environment variables for production:
 - Configure Cloudinary for production
 - Set NODE_ENV=production
 
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👥 Authors
-
-- **Your Name** - _Initial work_ - [YourGitHub](https://github.com/yourusername)
-
 ## 🙏 Acknowledgments
 
 - [Unsplash](https://unsplash.com) for food images
@@ -261,13 +230,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Tailwind CSS](https://tailwindcss.com) for styling
 - [MongoDB](https://mongodb.com) for database
 
-## 📞 Support
-
-If you have any questions or need help, please:
-
-- Open an issue on GitHub
-- Email: your.email@example.com
-
----
 
 Made with ❤️ for food lovers everywhere

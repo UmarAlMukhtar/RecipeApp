@@ -20,28 +20,12 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
               <a
-                href="https://github.com"
+                href="https://github.com/UmarAlMukhtar/RecipeApp"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-orange-400 transition-colors"
               >
                 <FiGithub size={20} />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-orange-400 transition-colors"
-              >
-                <FiTwitter size={20} />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-orange-400 transition-colors"
-              >
-                <FiInstagram size={20} />
               </a>
             </div>
           </div>
@@ -110,7 +94,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2024 RecipeShare. All rights reserved.
+            © 2025 Umar Al Mukhtar. All rights reserved.
           </p>
           <p className="text-gray-400 text-sm flex items-center mt-2 md:mt-0">
             Made with <FiHeart className="text-red-500 mx-1" size={16} /> for food lovers
