@@ -80,7 +80,7 @@ router.post(
 router.post(
   "/login",
   [
-    body("email").isEmail().withMessage("Please enter a valid email"),
+    body("email").notEmpty().withMessage("Email or username is required"),
     body("password").exists().withMessage("Password is required"),
   ],
   async (req, res) => {
@@ -92,8 +92,14 @@ router.post(
 
       const { email, password } = req.body;
 
-      // Check if user exists
-      const user = await User.findOne({ email });
+      // Check if user exists by email or username
+      const user = await User.findOne({
+        $or: [
+          { email: email },
+          { username: email }, // Using email field for both email and username input
+        ],
+      });
+
       if (!user) {
         return res.status(400).json({ message: "Invalid credentials" });
       }

@@ -78,10 +78,13 @@ export const AuthProvider = ({ children }) => {
     loadUser()
   }, [])
 
-  const login = async (email, password) => {
+  const login = async (emailOrUsername, password) => {
     dispatch({ type: 'LOGIN_START' })
     try {
-      const response = await api.post('/auth/login', { email, password })
+      const response = await api.post('/auth/login', { 
+        email: emailOrUsername, // Backend will handle both email and username
+        password 
+      })
       const { token, user } = response.data
 
       console.log('Login response user:', user);

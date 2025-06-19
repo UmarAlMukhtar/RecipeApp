@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext'
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
+    email: '', // This will now accept both email and username
     password: ''
   })
   const [showPassword, setShowPassword] = useState(false)
@@ -67,20 +67,20 @@ const Login = () => {
           <div className="space-y-4">
             <div>
               <label htmlFor="email" className="form-label">
-                Email Address
+                Email or Username
               </label>
               <div className="relative">
                 <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10" size={20} />
                 <input
                   id="email"
                   name="email"
-                  type="email"
+                  type="text"
                   autoComplete="email"
                   required
                   value={formData.email}
                   onChange={handleChange}
                   className="form-input pl-12 pr-4"
-                  placeholder="Enter your email"
+                  placeholder="Enter your email or username"
                 />
               </div>
             </div>
