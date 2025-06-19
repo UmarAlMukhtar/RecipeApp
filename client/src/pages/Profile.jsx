@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { FiEdit3, FiHeart, FiBookmark, FiUser, FiPlus } from 'react-icons/fi'
+import { FiEdit3, FiHeart, FiBookmark, FiUser, FiPlus, FiMoreVertical, FiTrash2, FiEdit } from 'react-icons/fi'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import api from '../utils/api'
@@ -19,6 +19,7 @@ const Profile = () => {
     username: user?.username || '',
     bio: user?.bio || ''
   })
+  const [dropdownOpen, setDropdownOpen] = useState({})
 
   const tabs = [
     { id: 'my-recipes', label: 'My Recipes', icon: FiUser },
@@ -57,16 +58,40 @@ const Profile = () => {
 
     setLoading(true)
     try {
-      const [myRecipesRes, savedRecipesRes] = await Promise.all([
-        api.get(`/users/${user._id}/recipes`),
-        api.get('/users/profile/saved')
-      ])
+      // Try different API endpoints to get user recipes
+      let myRecipesRes, savedRecipesRes;
+      
+      try {
+        // First try the user-specific recipes endpoint
+        myRecipesRes = await api.get(`/users/${user._id}/recipes`)
+      } catch (error) {
+        console.log('User recipes endpoint not found, trying alternative...')
+        // If that fails, get all recipes and filter by author
+        const allRecipesRes = await api.get('/recipes?limit=100')
+        const userRecipes = allRecipesRes.data.recipes?.filter(recipe => 
+          recipe.author._id === user._id || recipe.author === user._id
+        ) || []
+        myRecipesRes = { data: userRecipes }
+      }
 
-      setMyRecipes(myRecipesRes.data)
-      setSavedRecipes(savedRecipesRes.data)
+      try {
+        savedRecipesRes = await api.get('/users/profile/saved')
+      } catch (error) {
+        console.log('Saved recipes endpoint not found')
+        savedRecipesRes = { data: [] }
+      }
+
+      setMyRecipes(myRecipesRes.data || [])
+      setSavedRecipes(savedRecipesRes.data || [])
+      
+      console.log('My recipes:', myRecipesRes.data)
+      console.log('Saved recipes:', savedRecipesRes.data)
     } catch (error) {
       console.error('Error fetching user data:', error)
       toast.error('Failed to load profile data')
+      // Set empty arrays on error
+      setMyRecipes([])
+      setSavedRecipes([])
     } finally {
       setLoading(false)
     }
@@ -90,6 +115,28 @@ const Profile = () => {
       ...profileData,
       [e.target.name]: e.target.value
     })
+  }
+
+  const handleDeleteRecipe = async (recipeId) => {
+    if (!window.confirm('Are you sure you want to delete this recipe? This action cannot be undone.')) {
+      return
+    }
+
+    try {
+      await api.delete(`/recipes/${recipeId}`)
+      setMyRecipes(prev => prev.filter(recipe => recipe._id !== recipeId))
+      toast.success('Recipe deleted successfully!')
+    } catch (error) {
+      console.error('Error deleting recipe:', error)
+      toast.error('Failed to delete recipe')
+    }
+  }
+
+  const toggleDropdown = (recipeId) => {
+    setDropdownOpen(prev => ({
+      ...prev,
+      [recipeId]: !prev[recipeId]
+    }))
   }
 
   if (loading) return <LoadingSpinner />
@@ -245,7 +292,42 @@ const Profile = () => {
               ) : (
                 <div className="recipe-grid">
                   {myRecipes.map((recipe) => (
-                    <RecipeCard key={recipe._id} recipe={recipe} />
+                    <div key={recipe._id} className="relative">
+                      <RecipeCard recipe={recipe} />
+                      
+                      {/* Recipe Actions Dropdown */}
+                      <div className="absolute top-2 right-2 z-10">
+                        <button
+                          onClick={() => toggleDropdown(recipe._id)}
+                          className="p-2 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          <FiMoreVertical size={16} className="text-gray-600 dark:text-gray-400" />
+                        </button>
+                        
+                        {dropdownOpen[recipe._id] && (
+                          <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 border dark:border-gray-700 z-20">
+                            <Link
+                              to={`/edit-recipe/${recipe._id}`}
+                              onClick={() => setDropdownOpen({})}
+                              className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            >
+                              <FiEdit className="mr-2" size={16} />
+                              Edit Recipe
+                            </Link>
+                            <button
+                              onClick={() => {
+                                handleDeleteRecipe(recipe._id)
+                                setDropdownOpen({})
+                              }}
+                              className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                            >
+                              <FiTrash2 className="mr-2" size={16} />
+                              Delete Recipe
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   ))}
                 </div>
               )}

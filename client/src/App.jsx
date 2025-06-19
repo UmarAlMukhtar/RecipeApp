@@ -16,6 +16,7 @@ import Register from './pages/Register'
 import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
 import UserProfile from './pages/UserProfile'
+import EditRecipe from './pages/EditRecipe'
 
 function App() {
   return (
@@ -37,6 +38,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <SubmitRecipe />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/edit-recipe/:id"
+                  element={
+                    <ProtectedRoute>
+                      <EditRecipe />
                     </ProtectedRoute>
                   }
                 />
