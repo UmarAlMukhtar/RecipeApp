@@ -16,6 +16,10 @@ pnpm-debug.log*
 .env.test.local
 .env.production.local
 
+# Production environment files
+dist/
+build/
+
 # Logs
 logs
 *.log
