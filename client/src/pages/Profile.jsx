@@ -30,7 +30,10 @@ const Profile = () => {
   }, [user?._id])
 
   const fetchUserData = async () => {
-    if (!user?._id) return
+    if (!user?._id) {
+      setLoading(false)
+      return
+    }
 
     setLoading(true)
     try {
