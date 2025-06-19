@@ -1,0 +1,396 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #fff7ed;
+  --color-primary-100: #ffedd5;
+  --color-primary-200: #fed7aa;
+  --color-primary-300: #fdba74;
+  --color-primary-400: #fb923c;
+  --color-primary-500: #f97316;
+  --color-primary-600: #ea580c;
+  --color-primary-700: #c2410c;
+  --color-primary-800: #9a3412;
+  --color-primary-900: #7c2d12;
+  
+  --font-family-sans: 'Inter', system-ui, sans-serif;
+  
+  --animate-fade-in: fadeIn 0.5s ease-out;
+  --animate-slide-in-right: slideInRight 0.3s ease-out;
+  --animate-bounce-slow: bounce 2s infinite;
+  --animate-pulse-slow: pulse 3s infinite;
+}
+
+:root {
+  font-family: var(--font-family-sans);
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Toast variables */
+  --toast-bg: #ffffff;
+  --toast-color: #374151;
+}
+
+html.dark {
+  --toast-bg: #1f2937;
+  --toast-color: #f3f4f6;
+  color-scheme: dark;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: theme(colors.gray.100);
+}
+
+.dark ::-webkit-scrollbar-track {
+  background-color: theme(colors.gray.800);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: theme(colors.gray.300);
+  border-radius: theme(borderRadius.lg);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: theme(colors.gray.600);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: theme(colors.gray.400);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: theme(colors.gray.500);
+}
+
+/* Smooth transitions */
+* {
+  transition: color 200ms, background-color 200ms, border-color 200ms;
+}
+
+/* Loading spinner */
+.spinner {
+  animation: spin 1s linear infinite;
+  border-radius: 9999px;
+  height: 2rem;
+  width: 2rem;
+  border-width: 2px;
+  border-style: solid;
+  border-color: transparent;
+  border-bottom-color: theme(colors.orange.500);
+}
+
+/* Recipe card hover effect */
+.recipe-card {
+  transform: scale(1);
+  transition: all 300ms;
+}
+
+.recipe-card:hover {
+  transform: scale(1.05);
+  box-shadow: theme(boxShadow.xl);
+}
+
+/* Button animations */
+.btn-primary {
+  background-color: theme(colors.orange.500);
+  color: white;
+  padding: theme(spacing.3) theme(spacing.6);
+  border-radius: theme(borderRadius.lg);
+  font-weight: 600;
+  transition: all 200ms;
+}
+
+.btn-primary:hover {
+  background-color: theme(colors.orange.600);
+  box-shadow: theme(boxShadow.lg);
+}
+
+.btn-primary:active {
+  transform: scale(0.95);
+}
+
+.btn-secondary {
+  background-color: theme(colors.gray.200);
+  color: theme(colors.gray.800);
+  padding: theme(spacing.3) theme(spacing.6);
+  border-radius: theme(borderRadius.lg);
+  font-weight: 600;
+  transition: all 200ms;
+}
+
+.dark .btn-secondary {
+  background-color: theme(colors.gray.700);
+  color: theme(colors.gray.200);
+}
+
+.btn-secondary:hover {
+  background-color: theme(colors.gray.300);
+}
+
+.dark .btn-secondary:hover {
+  background-color: theme(colors.gray.600);
+}
+
+.btn-secondary:active {
+  transform: scale(0.95);
+}
+
+/* Form inputs */
+.form-input {
+  width: 100%;
+  padding: theme(spacing.3) theme(spacing.4);
+  border: 1px solid theme(colors.gray.300);
+  border-radius: theme(borderRadius.lg);
+  background-color: white;
+  color: theme(colors.gray.900);
+  transition: all 200ms;
+}
+
+.dark .form-input {
+  border-color: theme(colors.gray.600);
+  background-color: theme(colors.gray.800);
+  color: theme(colors.gray.100);
+}
+
+.form-input:focus {
+  outline: none;
+  ring: 2px solid theme(colors.orange.500);
+  border-color: transparent;
+}
+
+.form-label {
+  display: block;
+  font-size: theme(fontSize.sm);
+  font-weight: 500;
+  color: theme(colors.gray.700);
+  margin-bottom: theme(spacing.2);
+}
+
+.dark .form-label {
+  color: theme(colors.gray.300);
+}
+
+/* Grid layouts */
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: theme(spacing.6);
+}
+
+@media (min-width: 640px) {
+  .recipe-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .recipe-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .recipe-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Markdown styles */
+.markdown-content h1 {
+  font-size: theme(fontSize.2xl);
+  font-weight: 700;
+  margin-bottom: theme(spacing.4);
+  color: theme(colors.gray.900);
+}
+
+.dark .markdown-content h1 {
+  color: theme(colors.gray.100);
+}
+
+.markdown-content h2 {
+  font-size: theme(fontSize.xl);
+  font-weight: 600;
+  margin-bottom: theme(spacing.3);
+  color: theme(colors.gray.800);
+}
+
+.dark .markdown-content h2 {
+  color: theme(colors.gray.200);
+}
+
+.markdown-content h3 {
+  font-size: theme(fontSize.lg);
+  font-weight: 500;
+  margin-bottom: theme(spacing.2);
+  color: theme(colors.gray.700);
+}
+
+.dark .markdown-content h3 {
+  color: theme(colors.gray.300);
+}
+
+.markdown-content p {
+  margin-bottom: theme(spacing.3);
+  color: theme(colors.gray.700);
+  line-height: 1.625;
+}
+
+.dark .markdown-content p {
+  color: theme(colors.gray.300);
+}
+
+.markdown-content ol {
+  list-style-type: decimal;
+  list-style-position: inside;
+  margin-bottom: theme(spacing.4);
+}
+
+.markdown-content ol li {
+  margin-bottom: theme(spacing.2);
+}
+
+.markdown-content ul {
+  list-style-type: disc;
+  list-style-position: inside;
+  margin-bottom: theme(spacing.4);
+}
+
+.markdown-content ul li {
+  margin-bottom: theme(spacing.2);
+}
+
+.markdown-content li {
+  color: theme(colors.gray.700);
+}
+
+.dark .markdown-content li {
+  color: theme(colors.gray.300);
+}
+
+.markdown-content strong {
+  font-weight: 600;
+  color: theme(colors.gray.900);
+}
+
+.dark .markdown-content strong {
+  color: theme(colors.gray.100);
+}
+
+.markdown-content code {
+  background-color: theme(colors.gray.100);
+  padding: theme(spacing.1) theme(spacing.2);
+  border-radius: theme(borderRadius.DEFAULT);
+  font-family: theme(fontFamily.mono);
+  font-size: theme(fontSize.sm);
+}
+
+.dark .markdown-content code {
+  background-color: theme(colors.gray.800);
+}
+
+/* Text truncation utilities */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Hero gradient */
+.hero-gradient {
+  background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+}
+
+/* Recipe tags */
+.recipe-tag {
+  display: inline-block;
+  background-color: theme(colors.orange.100);
+  color: theme(colors.orange.800);
+  padding: theme(spacing.1) theme(spacing.3);
+  border-radius: 9999px;
+  font-size: theme(fontSize.sm);
+  font-weight: 500;
+}
+
+.dark .recipe-tag {
+  background-color: theme(colors.orange.900);
+  color: theme(colors.orange.200);
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes slideInRight {
+  from { 
+    opacity: 0; 
+    transform: translateX(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Mobile menu animation */
+@media (max-width: 768px) {
+  .mobile-menu-enter {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  
+  .mobile-menu-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 0.3s ease-out;
+  }
+  
+  .mobile-menu-exit {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  .mobile-menu-exit-active {
+    opacity: 0;
+    transform: translateX(-100%);
+    transition: all 0.3s ease-out;
+  }
+}
