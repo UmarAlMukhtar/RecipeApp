@@ -110,7 +110,7 @@ const Register = () => {
                 Username
               </label>
               <div className="relative">
-                <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <FiUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10" size={20} />
                 <input
                   id="username"
                   name="username"
@@ -119,7 +119,7 @@ const Register = () => {
                   required
                   value={formData.username}
                   onChange={handleChange}
-                  className={`form-input pl-10 ${errors.username ? 'border-red-500' : ''}`}
+                  className={`form-input pl-12 pr-4 ${errors.username ? 'border-red-500' : ''}`}
                   placeholder="Choose a username"
                 />
               </div>
@@ -133,7 +133,7 @@ const Register = () => {
                 Email Address
               </label>
               <div className="relative">
-                <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10" size={20} />
                 <input
                   id="email"
                   name="email"
@@ -142,7 +142,7 @@ const Register = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className={`form-input pl-10 ${errors.email ? 'border-red-500' : ''}`}
+                  className={`form-input pl-12 pr-4 ${errors.email ? 'border-red-500' : ''}`}
                   placeholder="Enter your email"
                 />
               </div>
@@ -156,7 +156,7 @@ const Register = () => {
                 Password
               </label>
               <div className="relative">
-                <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10" size={20} />
                 <input
                   id="password"
                   name="password"
@@ -165,13 +165,13 @@ const Register = () => {
                   required
                   value={formData.password}
                   onChange={handleChange}
-                  className={`form-input pl-10 pr-10 ${errors.password ? 'border-red-500' : ''}`}
+                  className={`form-input pl-12 pr-12 ${errors.password ? 'border-red-500' : ''}`}
                   placeholder="Create a password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 z-10"
                 >
                   {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
                 </button>
@@ -186,7 +186,7 @@ const Register = () => {
                 Confirm Password
               </label>
               <div className="relative">
-                <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10" size={20} />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -195,13 +195,13 @@ const Register = () => {
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className={`form-input pl-10 pr-10 ${errors.confirmPassword ? 'border-red-500' : ''}`}
+                  className={`form-input pl-12 pr-12 ${errors.confirmPassword ? 'border-red-500' : ''}`}
                   placeholder="Confirm your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 z-10"
                 >
                   {showConfirmPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
                 </button>
